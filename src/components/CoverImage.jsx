@@ -6,7 +6,7 @@ export default function CoverImage({ src, alt, className = '' }) {
   if (failed) {
     return (
       <div className={`flex items-center justify-center bg-slate-200 text-sm font-semibold text-slate-500 ${className}`} role="img" aria-label={`${alt} placeholder`}>
-        Teso Post
+        TESO POST
       </div>
     );
   }

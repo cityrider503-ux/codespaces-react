@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Info, LogIn, LogOut, Menu, PenLine } from 'lucide-react';
+import logo from '../logo.svg';
 import { useAuth } from '../context/AuthContext';
 
 export default function SiteHeader() {
@@ -21,8 +22,9 @@ export default function SiteHeader() {
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <Link to="/" className="text-2xl font-bold tracking-tight text-slate-950">
-          Teso Post
+        <Link to="/" className="flex items-center gap-3 text-slate-950">
+          <img src={logo} alt="TESO POST logo" className="h-10 w-10 rounded-full object-cover" />
+          <span className="text-lg font-black tracking-[0.18em] uppercase sm:text-xl">TESO POST</span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-semibold text-slate-700 md:flex">
           <Link className="transition-colors hover:text-teal-700" to="/about">About</Link>

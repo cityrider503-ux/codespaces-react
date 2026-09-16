@@ -73,6 +73,7 @@ export default function Home() {
   const leftSidebarPosts = posts.slice(0, 3);
   const rightSidebarPosts = posts.slice(1, 5);
   const topicPills = ['Politics', 'Education', 'Culture', 'Business', 'Environment', 'Community'];
+  const tickerPosts = posts.length ? [...posts, ...posts].slice(0, 14) : [];
 
   const goToSlide = (index) => setActiveSlide(index);
   const moveSlide = (direction) => {
@@ -90,16 +91,32 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_top,_rgba(20,184,166,0.18),_transparent_52%)]" />
 
         <section className="relative mx-auto max-w-[1500px] px-4 pb-10 pt-12 md:px-6 md:pt-16">
-          <div className="max-w-3xl animate-rise-in">
-            <p className="eyebrow text-teal-700">Independent reporting <span className="ml-3 text-slate-400">/</span> Teso; Uganda, kenya, South Sudan, Ethiopia</p>
-            <h1 className="mt-5 font-display text-5xl font-bold leading-[0.95] tracking-tight text-slate-950 md:text-7xl xl:text-[5.5rem]">
-              Stories with a {' '}
-              <span key={heroWordIndex} className="hero-word text-teal-700">{rotatingWords[heroWordIndex]}</span>
-              <br />
-            </h1>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600">A sharper look at the people, places, and decisions shaping life around us.</p>
+          <div className="masthead-shell">
+            <div className="max-w-3xl animate-rise-in">
+              <p className="eyebrow text-teal-700">Independent reporting <span className="ml-3 text-slate-400">/</span> Teso; Uganda, kenya, South Sudan, Ethiopia</p>
+              <h1 className="mt-5 font-display text-5xl font-bold leading-[0.95] tracking-tight text-slate-950 md:text-7xl xl:text-[5.5rem]">
+                Stories with a {' '}
+                <span key={heroWordIndex} className="hero-word text-teal-700">{rotatingWords[heroWordIndex]}</span>
+                <br />
+              </h1>
+              <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600">A sharper look at the people, places, and decisions shaping life around us.</p>
+            </div>
           </div>
-          <div className="mt-10 flex items-center gap-4 border-y border-slate-200/80 py-4 text-xs font-bold uppercase tracking-[0.18em] text-slate-500"><span className="inline-block h-2.5 w-2.5 rounded-full bg-amber-400 shadow-[0_0_16px_rgba(251,191,36,0.8)]" /> The latest from the desk <span className="ml-auto hidden text-slate-400 sm:inline">Read slowly. Think deeply.</span></div>
+
+          <div className="news-ticker mt-10">
+            <div className="news-ticker__label">The latest from the desk</div>
+            <div className="news-ticker__viewport" aria-live="polite">
+              <div className="news-ticker__track">
+                {tickerPosts.map((post, index) => (
+                  <div className="news-ticker__item" key={`${post.id}-${index}`}>
+                    <span className="news-ticker__dot" aria-hidden="true" />
+                    <span>{post.title}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="news-ticker__tagline">Read slowly. Think deeply.</div>
+          </div>
         </section>
 
         <section className="relative mx-auto max-w-[1500px] px-4 pb-8 md:px-6">
@@ -229,7 +246,7 @@ export default function Home() {
           )}
 
           <section className="pt-12">
-            <div className="mb-8 flex items-center justify-between gap-4">
+            <div className="editorial-rule mb-8 flex items-center justify-between gap-4">
               <div>
                 <p className="eyebrow text-teal-700">More reporting</p>
                 <h3 className="mt-2 font-display text-3xl text-slate-950 md:text-4xl">Latest stories</h3>
@@ -238,7 +255,7 @@ export default function Home() {
 
             <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {posts.slice(1).map((post, index) => (
-                <article className="animate-rise-in" style={{ animationDelay: `${index * 90}ms` }} key={post.id}>
+                <article className="story-card animate-rise-in" style={{ animationDelay: `${index * 90}ms` }} key={post.id}>
                   <Link to={`/post/${post.slug}`} className="group block">
                     <div className="glass-card overflow-hidden rounded-[22px] border border-white/20 p-2">
                       <CoverImage src={post.image_url} alt={post.title} className="image-zoom aspect-[4/3] w-full rounded-[16px] object-cover" />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import SiteFooter from '../components/SiteFooter';
 import SiteHeader from '../components/SiteHeader';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -90,7 +91,51 @@ export default function CreatePost() {
     }
   }
 
-  if (loading) return <><SiteHeader /><main className="mx-auto max-w-3xl px-6 py-12">Loading article...</main></>;
+  if (loading) return <><SiteHeader /><main className="relative overflow-hidden pb-20"><div className="mx-auto max-w-4xl rounded-[30px] border border-white/20 bg-white/50 p-6"><p className="text-slate-500">Loading article...</p></div></main></>;
 
-  return <><SiteHeader /><main className="mx-auto max-w-3xl px-6 py-12"><p className="text-sm font-bold uppercase tracking-[0.2em] text-teal-700">Editorial desk</p><h1 className="mt-3 text-5xl font-bold tracking-tight text-slate-950">{id ? 'Edit article' : 'Create an article'}</h1><form className="mt-10 space-y-6" onSubmit={handleSubmit}><label className="block"><span className="mb-2 block font-semibold">Title</span><input className="w-full border border-slate-300 bg-white px-4 py-3" name="title" value={form.title} onChange={updateField} required /></label><label className="block"><span className="mb-2 block font-semibold">Slug</span><input className="w-full border border-slate-300 bg-white px-4 py-3" name="slug" value={form.slug} onChange={updateField} required /></label><label className="block"><span className="mb-2 block font-semibold">Excerpt</span><textarea className="w-full border border-slate-300 bg-white px-4 py-3" name="excerpt" rows="3" value={form.excerpt || ''} onChange={updateField} /></label><label className="block"><span className="mb-2 block font-semibold">Article content</span><textarea className="w-full border border-slate-300 bg-white px-4 py-3" name="content" rows="16" value={form.content} onChange={updateField} required /></label><label className="block"><span className="mb-2 block font-semibold">Cover image</span><input className="w-full border border-slate-300 bg-white px-4 py-3" type="file" accept="image/*" onChange={(event) => setFile(event.target.files?.[0] || null)} /></label><label className="flex items-center gap-3"><input type="checkbox" name="published" checked={form.published} onChange={updateField} /><span className="font-semibold">Publish immediately</span></label><button className="bg-slate-950 px-6 py-3 font-semibold text-white disabled:opacity-50" type="submit" disabled={saving}>{saving ? 'Saving...' : id ? 'Update article' : 'Publish article'}</button></form></main></>;
+  return (
+    <>
+      <SiteHeader />
+      <main className="relative overflow-hidden pb-20">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[350px] bg-[radial-gradient(circle_at_top,_rgba(20,184,166,0.12),_transparent_60%)]" />
+        <div className="relative mx-auto max-w-[1500px] px-4 py-12 md:px-6 md:py-16">
+          <div className="glass-panel mx-auto max-w-4xl rounded-[30px] border border-white/20 p-6 sm:p-8 md:p-10">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-teal-700">Editorial desk</p>
+            <h1 className="mt-3 text-4xl font-bold tracking-tight text-slate-950 md:text-5xl">{id ? 'Edit article' : 'Create an article'}</h1>
+
+            <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
+              <label className="block">
+                <span className="mb-2 block font-semibold text-slate-700">Title</span>
+                <input className="w-full rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-200" name="title" value={form.title} onChange={updateField} required />
+              </label>
+              <label className="block">
+                <span className="mb-2 block font-semibold text-slate-700">Slug</span>
+                <input className="w-full rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-200" name="slug" value={form.slug} onChange={updateField} required />
+              </label>
+              <label className="block">
+                <span className="mb-2 block font-semibold text-slate-700">Excerpt</span>
+                <textarea className="w-full rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-200" name="excerpt" rows="3" value={form.excerpt || ''} onChange={updateField} />
+              </label>
+              <label className="block">
+                <span className="mb-2 block font-semibold text-slate-700">Article content</span>
+                <textarea className="w-full rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-200" name="content" rows="16" value={form.content} onChange={updateField} required />
+              </label>
+              <label className="block">
+                <span className="mb-2 block font-semibold text-slate-700">Cover image</span>
+                <input className="w-full rounded-2xl border border-slate-300 bg-white/80 px-4 py-3" type="file" accept="image/*" onChange={(event) => setFile(event.target.files?.[0] || null)} />
+              </label>
+              <label className="flex items-center gap-3 text-slate-700">
+                <input type="checkbox" name="published" checked={form.published} onChange={updateField} />
+                <span className="font-semibold">Publish immediately</span>
+              </label>
+              <button className="rounded-full bg-slate-950 px-6 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50" type="submit" disabled={saving}>
+                {saving ? 'Saving...' : id ? 'Update article' : 'Publish article'}
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+      <SiteFooter />
+    </>
+  );
 }

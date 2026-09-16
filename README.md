@@ -1,70 +1,38 @@
-# GitHub Codespaces ♥️ React
+# React + Supabase on Vercel
 
-Welcome to your shiny new Codespace running React! We've got everything fired up and running for you to explore React.
+This is a Vite React app backed by Supabase.
 
-You've got a blank canvas to work on from a git perspective as well. There's a single initial commit with the what you're seeing right now - where you go from here is up to you!
+## Local development
 
-Everything you do here is contained within this one codespace. There is no repository on GitHub yet. If and when you’re ready you can click "Publish Branch" and we’ll create your repository and push up your project. If you were just exploring then and have no further need for this code then you can simply delete your codespace and it's gone forever.
+1. Install dependencies with `npm install`.
+2. Copy `.env.example` to `.env.local`.
+3. Set the Supabase project URL and anon key in `.env.local`.
+4. Run `npm start` and open `http://localhost:3000`.
 
-This project was bootstrapped for you with [Vite](https://vitejs.dev/).
+Run the production build locally with `npm run build` and `npm run preview`.
 
-## Available Scripts
+## Deploy to Vercel
 
-In the project directory, you can run:
+1. Push this repository to GitHub.
+2. In Vercel, select **Add New Project**, import the repository, and keep the detected Vite settings:
+   - Build command: `npm run build`
+   - Output directory: `dist`
+3. Add these environment variables in the Vercel project settings for **Production**, **Preview**, and **Development**:
+   - `VITE_SUPABASE_URL`: the Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY`: the Supabase anon/public key
+4. Deploy the project.
 
-### `npm start`
+The included `vercel.json` rewrite keeps React Router URLs working when a page is opened directly.
 
-We've already run this for you in the `Codespaces: server` terminal window below. If you need to stop the server for any reason you can just run `npm start` again to bring it back online.
+## Supabase setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000/](http://localhost:3000/) in the built-in Simple Browser (`Cmd/Ctrl + Shift + P > Simple Browser: Show`) to view your running application.
+Run [`supabase/schema.sql`](supabase/schema.sql) in the Supabase SQL Editor before using authentication, posts, or post images.
 
-The page will reload automatically when you make changes.\
-You may also see any lint errors in the console.
+For email authentication, add the deployed Vercel URL to Supabase **Authentication > URL Configuration** as the Site URL and add the Vercel preview URLs as additional redirect URLs when needed.
 
-### `npm test`
+## Scripts
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Learn More
-
-You can learn more in the [Vite documentation](https://vitejs.dev/guide/).
-
-To learn Vitest, a Vite-native testing framework, go to [Vitest documentation](https://vitest.dev/guide/)
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://sambitsahoo.com/blog/vite-code-splitting-that-works.html](https://sambitsahoo.com/blog/vite-code-splitting-that-works.html)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://github.com/btd/rollup-plugin-visualizer#rollup-plugin-visualizer](https://github.com/btd/rollup-plugin-visualizer#rollup-plugin-visualizer)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://dev.to/hamdankhan364/simplifying-progressive-web-app-pwa-development-with-vite-a-beginners-guide-38cf](https://dev.to/hamdankhan364/simplifying-progressive-web-app-pwa-development-with-vite-a-beginners-guide-38cf)
-
-### Advanced Configuration
-
-This section has moved here: [https://vitejs.dev/guide/build.html#advanced-base-options](https://vitejs.dev/guide/build.html#advanced-base-options)
-
-### Deployment
-
-This section has moved here: [https://vitejs.dev/guide/build.html](https://vitejs.dev/guide/build.html)
-
-### Troubleshooting
-
-This section has moved here: [https://vitejs.dev/guide/troubleshooting.html](https://vitejs.dev/guide/troubleshooting.html)
+- `npm start`: start the Vite development server
+- `npm run build`: create the production build in `dist`
+- `npm run preview`: preview the production build
+- `npm test`: run the test suite

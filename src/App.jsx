@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
+import CategoryPage from './pages/CategoryPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/category/:slug" element={<CategoryPage />} />
           <Route path="/post/:slug" element={<PostDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />

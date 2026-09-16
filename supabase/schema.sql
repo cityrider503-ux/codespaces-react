@@ -7,6 +7,13 @@ create table if not exists public.profiles (
   updated_at timestamptz not null default timezone('utc', now())
 );
 
+create table if not exists public.categories (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default timezone('utc', now()),
+  name text not null unique,
+  slug text not null unique
+);
+
 create table if not exists public.posts (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default timezone('utc', now()),
@@ -19,9 +26,24 @@ create table if not exists public.posts (
   author_id uuid not null references public.profiles(id) on delete cascade
 );
 
+alter table public.posts
+  add column if not exists category_id uuid references public.categories(id) on delete set null;
+
 create index if not exists posts_created_at_idx on public.posts (created_at desc);
 create index if not exists posts_author_id_idx on public.posts (author_id);
 create index if not exists posts_published_idx on public.posts (published);
+create index if not exists posts_category_id_idx on public.posts (category_id);
+create index if not exists categories_slug_idx on public.categories (slug);
+
+insert into public.categories (name, slug)
+values
+  ('Politics', 'politics'),
+  ('Education', 'education'),
+  ('Culture', 'culture'),
+  ('Business', 'business'),
+  ('Environment', 'environment'),
+  ('Community', 'community')
+on conflict (slug) do nothing;
 
 create or replace function public.handle_new_user()
 returns trigger
@@ -47,6 +69,7 @@ for each row execute procedure public.handle_new_user();
 
 alter table public.profiles enable row level security;
 alter table public.posts enable row level security;
+alter table public.categories enable row level security;
 
 drop policy if exists "Profiles are publicly readable" on public.profiles;
 create policy "Profiles are publicly readable" on public.profiles for select using (true);
@@ -54,6 +77,10 @@ create policy "Profiles are publicly readable" on public.profiles for select usi
 drop policy if exists "Users can update their own profile" on public.profiles;
 create policy "Users can update their own profile" on public.profiles
 for update using (auth.uid() = id) with check (auth.uid() = id);
+
+drop policy if exists "Categories are publicly readable" on public.categories;
+create policy "Categories are publicly readable" on public.categories
+for select using (true);
 
 drop policy if exists "Published posts are publicly readable" on public.posts;
 create policy "Published posts are publicly readable" on public.posts

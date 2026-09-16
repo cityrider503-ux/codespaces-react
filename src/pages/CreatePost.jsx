@@ -18,24 +18,36 @@ function getStoragePath(publicUrl) {
     : decodeURIComponent(publicUrl.slice(markerIndex + marker.length));
 }
 
-const emptyForm = { title: '', slug: '', excerpt: '', content: '', image_url: '', published: true };
+const emptyForm = { title: '', slug: '', excerpt: '', content: '', image_url: '', category_id: '', published: true };
 
 export default function CreatePost() {
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState(emptyForm);
+  const [categories, setCategories] = useState([]);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    async function fetchCategories() {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('id, name, slug')
+        .order('name', { ascending: true });
+      if (!error) setCategories(data || []);
+    }
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
     if (!id) return;
     async function fetchPost() {
       try {
-        const { data, error } = await supabase.from('posts').select('title, slug, excerpt, content, image_url, published').eq('id', id).eq('author_id', user.id).single();
+        const { data, error } = await supabase.from('posts').select('title, slug, excerpt, content, image_url, published, category_id').eq('id', id).eq('author_id', user.id).single();
         if (error) throw error;
-        setForm(data);
+        setForm({ ...data, category_id: data.category_id || '' });
       } catch (error) {
         toast.error(error.message || 'Unable to load this article.');
         navigate('/dashboard');
@@ -74,7 +86,7 @@ export default function CreatePost() {
         const { data } = supabase.storage.from('post-images').getPublicUrl(path);
         imageUrl = data.publicUrl;
       }
-      const payload = { ...form, title: form.title.trim(), slug: makeSlug(form.slug || form.title), image_url: imageUrl || null, author_id: user.id };
+      const payload = { ...form, title: form.title.trim(), slug: makeSlug(form.slug || form.title), image_url: imageUrl || null, category_id: form.category_id || null, author_id: user.id };
       const request = id ? supabase.from('posts').update(payload).eq('id', id).eq('author_id', user.id).select().single() : supabase.from('posts').insert(payload).select().single();
       const { error } = await request;
       if (error) throw error;
@@ -111,6 +123,15 @@ export default function CreatePost() {
               <label className="block">
                 <span className="mb-2 block font-semibold text-slate-700">Slug</span>
                 <input className="w-full rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-200" name="slug" value={form.slug} onChange={updateField} required />
+              </label>
+              <label className="block">
+                <span className="mb-2 block font-semibold text-slate-700">Category</span>
+                <select className="w-full rounded-2xl border border-slate-300 bg-white/80 px-4 py-3 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-200" name="category_id" value={form.category_id || ''} onChange={updateField} required>
+                  <option value="">Select a category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                  ))}
+                </select>
               </label>
               <label className="block">
                 <span className="mb-2 block font-semibold text-slate-700">Excerpt</span>

@@ -54,18 +54,33 @@ body {
     transition: transform 180ms ease, background 180ms ease;
   }
   .glass-icon:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.9); }
-  .topic-pill {
-    display: inline-flex;
+  .topics-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 20rem;
+  }
+  .topic-link {
+    display: flex;
     align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    width: 100%;
     border-radius: 9999px;
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.10);
     background: rgba(255, 255, 255, 0.5);
-    padding: 0.45rem 0.8rem;
-    font-size: 0.72rem;
+    color: #0f172a;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #334155;
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease;
+  }
+  .topic-link:hover {
+    transform: translateX(2px);
+    background: rgba(255, 255, 255, 0.72);
+    border-color: rgba(13, 148, 136, 0.38);
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.06);
   }
   .image-zoom { transition: transform 500ms cubic-bezier(.2,.7,.2,1), filter 500ms ease; }
   .group:hover .image-zoom { transform: scale(1.025); filter: saturate(1.08); }

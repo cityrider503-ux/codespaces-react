@@ -17,6 +17,7 @@ function formatDate(value) {
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeSlide, setActiveSlide] = useState(0);
@@ -29,7 +30,7 @@ export default function Home() {
       try {
         const { data, error: queryError } = await supabase
           .from('posts')
-          .select('id, title, slug, excerpt, content, image_url, created_at, author_id, profiles(full_name)')
+          .select('id, title, slug, excerpt, content, image_url, created_at, author_id, profiles(full_name), category_id, categories(name, slug)')
           .eq('published', true)
           .order('created_at', { ascending: false });
         if (queryError) throw queryError;
@@ -41,7 +42,22 @@ export default function Home() {
         setLoading(false);
       }
     }
+
+    async function fetchCategories() {
+      try {
+        const { data, error: queryError } = await supabase
+          .from('categories')
+          .select('id, name, slug')
+          .order('name', { ascending: true });
+        if (queryError) throw queryError;
+        setCategories(data || []);
+      } catch (queryError) {
+        console.error(queryError);
+      }
+    }
+
     fetchPosts();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -72,7 +88,16 @@ export default function Home() {
   const activeHero = heroPosts[activeSlide] ?? posts[0];
   const leftSidebarPosts = posts.slice(0, 3);
   const rightSidebarPosts = posts.slice(1, 5);
-  const topicPills = ['Politics', 'Education', 'Culture', 'Business', 'Environment', 'Community'];
+  const topicPills = categories.length
+    ? categories.map((category) => ({ ...category, label: category.name }))
+    : [
+        { id: 'politics', slug: 'politics', name: 'Politics' },
+        { id: 'education', slug: 'education', name: 'Education' },
+        { id: 'culture', slug: 'culture', name: 'Culture' },
+        { id: 'business', slug: 'business', name: 'Business' },
+        { id: 'environment', slug: 'environment', name: 'Environment' },
+        { id: 'community', slug: 'community', name: 'Community' },
+      ];
   const tickerPosts = posts.length ? [...posts, ...posts].slice(0, 14) : [];
 
   const goToSlide = (index) => setActiveSlide(index);
@@ -129,11 +154,13 @@ export default function Home() {
           ) : (
             <div className="grid gap-6 xl:grid-cols-[240px_minmax(0,1fr)_300px] xl:items-stretch">
               <aside className="flex h-full flex-col gap-6">
-                <div className="glass-card h-full rounded-[24px] border border-white/20 p-4">
+                <div className="topics-panel glass-card h-full rounded-[28px] border border-white/20 p-4 sm:p-5">
                   <p className="eyebrow text-teal-700">Topics</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="mt-4 flex flex-col gap-3">
                     {topicPills.map((topic) => (
-                      <span key={topic} className="topic-pill">{topic}</span>
+                      <Link key={topic.slug} to={`/category/${topic.slug}`} className="topic-link">
+                        {topic.name.toUpperCase()}
+                      </Link>
                     ))}
                   </div>
                 </div>

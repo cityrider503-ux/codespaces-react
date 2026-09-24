@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Info, LogIn, LogOut, Menu, PenLine } from 'lucide-react';
+import { Info, LogOut, Menu, PenLine } from 'lucide-react';
 import logo from '../logo.svg';
 import { useAuth } from '../context/AuthContext';
 
@@ -43,12 +43,7 @@ export default function SiteHeader() {
                 Sign out
               </button>
             </>
-          ) : (
-            <Link className="inline-flex items-center gap-2" to="/login">
-              <LogIn size={16} aria-hidden="true" />
-              Sign in
-            </Link>
-          )}
+          ) : null}
         </nav>
         <button className="rounded-full border border-slate-200 bg-white/70 p-2 text-slate-700 shadow-sm backdrop-blur md:hidden" type="button" aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={mobileOpen} title={mobileOpen ? 'Close navigation' : 'Open navigation'} onClick={() => setMobileOpen((current) => !current)}>
           <Menu size={20} aria-hidden="true" />
@@ -64,7 +59,7 @@ export default function SiteHeader() {
               <Link onClick={closeMobileNav} to="/create-post">Write</Link>
               <button className="text-left" type="button" onClick={handleSignOut}>Sign out</button>
             </>
-          ) : <Link onClick={closeMobileNav} to="/login">Sign in</Link>}
+          ) : null}
         </div>
       </nav>
     </header>
